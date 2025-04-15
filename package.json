@@ -14,7 +14,11 @@
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run test/integration"
   },
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
@@ -22,6 +26,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "typescript": "^5.3.3"
+    "@vitest/coverage-v8": "^3.1.1",
+    "typescript": "^5.3.3",
+    "vitest": "^3.1.1"
   }
 }

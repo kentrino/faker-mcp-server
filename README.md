@@ -2,28 +2,26 @@
 
 MCP server to get fake strings
 
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
+This is a TypeScript-based MCP server that provides tools for generating fake data using Faker.js. It demonstrates core MCP concepts by providing:
+- Tools for generating various types of fake data (person, lorem, internet, etc.)
+- Support for different locales for internationalization
+- Customizable options for each data type
 
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
 
 ## Features
 
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
 ### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
+- `generate_person` - Generate fake person data (names, job titles, etc.)
+- `generate_lorem` - Generate fake lorem ipsum text
+- `generate_internet` - Generate fake internet data (emails, usernames, URLs, etc.)
+- `generate_date` - Generate fake dates
+- `generate_commerce` - Generate fake commerce data (products, prices, etc.)
+- And many more modules from Faker.js
 
-### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
+### Features
+- Support for multiple locales (en, ja, fr, etc.)
+- Customizable field selection for each data type
+- Configurable parameters (length, count, min/max values, etc.)
 
 ## Development
 
@@ -40,6 +38,28 @@ npm run build
 For development with auto-rebuild:
 ```bash
 npm run watch
+```
+
+## Testing
+
+Run all tests:
+```bash
+npm test
+```
+
+Run tests in watch mode:
+```bash
+npm run test:watch
+```
+
+Run integration tests specifically:
+```bash
+npm run test:integration
+```
+
+Generate test coverage report:
+```bash
+npm run test:coverage
 ```
 
 ## Installation
