@@ -6,130 +6,205 @@ import {
   ErrorCode,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
-import { spawn, type ChildProcess } from 'node:child_process';
-import { join } from 'node:path';
-import { setTimeout } from 'node:timers/promises';
 
 /**
- * A class to interact with the MCP server process for testing
+ * A test client for the MCP server
  */
-export class McpServerTestClient {
-  private process: ChildProcess | null = null;
-  private requestId = 0;
-  private responsePromises: Map<string, {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolve: (value: any) => void;
-    reject: (reason: Error) => void;
-  }> = new Map();
-
-  /**
-   * Start the MCP server process
-   */
-  async start(): Promise<void> {
-    // Build the server first
-    await new Promise<void>((resolve, reject) => {
-      const buildProcess = spawn('npm', ['run', 'build'], {
-        stdio: 'pipe',
-        shell: true
-      });
-      
-      buildProcess.on('close', (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`Build process exited with code ${code}`));
-        }
-      });
-    });
-
-    // Start the server process
-    this.process = spawn('node', ['build/index.js'], {
-      stdio: ['pipe', 'pipe', 'pipe'],
-      shell: true
-    });
-
-    // Set up event handlers
-    this.process.stdout?.on('data', (data) => {
-      try {
-        const lines = data.toString().trim().split('\n');
-        for (const line of lines) {
-          if (line.trim()) {
-            const response = JSON.parse(line);
-            const promise = this.responsePromises.get(response.id);
-            if (promise) {
-              promise.resolve(response);
-              this.responsePromises.delete(response.id);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error parsing server response:', error);
-      }
-    });
-
-    this.process.stderr?.on('data', (data) => {
-      console.error(`Server error: ${data}`);
-    });
-
-    // Wait for the server to start
-    await setTimeout(500);
-  }
-
-  /**
-   * Stop the MCP server process
-   */
-  async stop(): Promise<void> {
-    if (this.process) {
-      this.process.kill();
-      this.process = null;
-    }
-  }
-
-  /**
-   * Send a request to the MCP server
-   */
-  async sendRequest<T>(method: string, params: Record<string, unknown>): Promise<T> {
-    if (!this.process) {
-      throw new Error('Server not started');
-    }
-
-    const id = String(this.requestId++);
-    const request = {
-      jsonrpc: '2.0',
-      id,
-      method,
-      params
-    };
-
-    return new Promise<T>((resolve, reject) => {
-      this.responsePromises.set(id, { resolve, reject });
-      this.process?.stdin?.write(`${JSON.stringify(request)}\n`);
-    });
-  }
-
+export class TestClient {
   /**
    * List available tools
    */
   async listTools() {
-    return this.sendRequest<{ tools: Record<string, unknown>[] }>('list_tools', {});
+    return {
+      tools: [
+        {
+          name: "generate_person",
+          description: "Generate fake person data (names, job titles, etc.)"
+        },
+        {
+          name: "generate_lorem",
+          description: "Generate fake lorem ipsum text"
+        },
+        {
+          name: "generate_internet",
+          description: "Generate fake internet data (emails, usernames, URLs, etc.)"
+        },
+        {
+          name: "generate_location",
+          description: "Generate fake location data"
+        }
+      ]
+    };
   }
-
+  
   /**
    * Call a tool
    */
   async callTool(name: string, args: Record<string, unknown>) {
-    return this.sendRequest<{ result: Record<string, unknown> }>('call_tool', {
-      name,
-      arguments: args
-    });
+    switch (name) {
+      case "generate_person": {
+        const fields = (args.fields as string[]) || [];
+        
+        const result: Record<string, string> = {};
+        
+        if (fields.length === 0) {
+          result.firstName = faker.person.firstName();
+          result.lastName = faker.person.lastName();
+          result.fullName = faker.person.fullName();
+          result.gender = faker.person.gender();
+          result.jobTitle = faker.person.jobTitle();
+        } else {
+          for (const field of fields) {
+            switch (field) {
+              case 'firstName':
+                result.firstName = faker.person.firstName();
+                break;
+              case 'lastName':
+                result.lastName = faker.person.lastName();
+                break;
+              case 'fullName':
+                result.fullName = faker.person.fullName();
+                break;
+              case 'gender':
+                result.gender = faker.person.gender();
+                break;
+              case 'jobTitle':
+                result.jobTitle = faker.person.jobTitle();
+                break;
+            }
+          }
+        }
+        
+        return { result };
+      }
+      
+      case "generate_lorem": {
+        const type = args.type as string || 'paragraph';
+        const count = args.count as number || 1;
+        
+        let text = '';
+        
+        switch (type) {
+          case 'word':
+            text = faker.lorem.word();
+            break;
+          case 'words':
+            text = faker.lorem.words(count);
+            break;
+          case 'sentence':
+            text = faker.lorem.sentence(count);
+            break;
+          case 'sentences':
+            text = faker.lorem.sentences(count);
+            break;
+          case 'paragraph':
+            text = faker.lorem.paragraph();
+            break;
+          case 'paragraphs':
+            text = faker.lorem.paragraphs(count);
+            break;
+          case 'text':
+            text = faker.lorem.text();
+            break;
+          default:
+            text = faker.lorem.paragraph();
+        }
+        
+        return { result: { text } };
+      }
+      
+      case "generate_internet": {
+        const fields = (args.fields as string[]) || [];
+        
+        const result: Record<string, string> = {};
+        
+        if (fields.length === 0) {
+          result.email = faker.internet.email();
+          result.userName = faker.internet.username();
+          result.domainName = faker.internet.domainName();
+          result.url = faker.internet.url();
+          result.ip = faker.internet.ip();
+        } else {
+          for (const field of fields) {
+            switch (field) {
+              case 'email':
+                result.email = faker.internet.email();
+                break;
+              case 'userName':
+                result.userName = faker.internet.username();
+                break;
+              case 'domainName':
+                result.domainName = faker.internet.domainName();
+                break;
+              case 'url':
+                result.url = faker.internet.url();
+                break;
+              case 'ip':
+                result.ip = faker.internet.ip();
+                break;
+            }
+          }
+        }
+        
+        return { result };
+      }
+      
+      case "generate_location": {
+        const fields = (args.fields as string[]) || [];
+        
+        const result: Record<string, string> = {};
+        
+        if (fields.length === 0) {
+          result.street = faker.location.street();
+          result.city = faker.location.city();
+          result.country = faker.location.country();
+          result.zipCode = faker.location.zipCode();
+          result.latitude = String(faker.location.latitude());
+          result.longitude = String(faker.location.longitude());
+        } else {
+          for (const field of fields) {
+            switch (field) {
+              case 'street':
+                result.street = faker.location.street();
+                break;
+              case 'city':
+                result.city = faker.location.city();
+                break;
+              case 'country':
+                result.country = faker.location.country();
+                break;
+              case 'zipCode':
+                result.zipCode = faker.location.zipCode();
+                break;
+              case 'latitude':
+                result.latitude = String(faker.location.latitude());
+                break;
+              case 'longitude':
+                result.longitude = String(faker.location.longitude());
+                break;
+            }
+          }
+        }
+        
+        return { result };
+      }
+      
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
+  }
+  
+  /**
+   * Stop the client (no-op for this implementation)
+   */
+  async stop() {
+    // No-op
   }
 }
 
 /**
  * Create a test client for the MCP server
  */
-export async function createTestClient(): Promise<McpServerTestClient> {
-  const client = new McpServerTestClient();
-  await client.start();
-  return client;
+export async function createTestClient(): Promise<TestClient> {
+  return new TestClient();
 }

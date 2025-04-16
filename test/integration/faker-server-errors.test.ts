@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createTestClient, type McpServerTestClient } from './helpers';
+import { createTestClient, type TestClient } from './helpers';
 
 describe('Faker MCP Server Error Handling Tests', () => {
-  let client: McpServerTestClient;
+  let client: TestClient;
 
   // Set up the test client before all tests
   beforeAll(async () => {
