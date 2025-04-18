@@ -2,18 +2,19 @@
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { server } from "./server.js";
+import type { Readable, Writable } from "node:stream";
 
 /**
  * Start the server using stdio transport.
  * This allows the server to communicate via standard input/output streams.
  */
-async function main() {
-  const transport = new StdioServerTransport();
+async function main(stdin: Readable, stdout: Writable) {
+  const transport = new StdioServerTransport(stdin, stdout);
   await server.connect(transport);
   console.error("Faker MCP server running on stdio");
 }
 
-main().catch((error) => {
+main(process.stdin, process.stdout).catch((error) => {
   console.error("Server error:", error);
   process.exit(1);
 });
