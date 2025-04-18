@@ -8,7 +8,7 @@ import type { Readable, Writable } from "node:stream";
  * Start the server using stdio transport.
  * This allows the server to communicate via standard input/output streams.
  */
-async function main(stdin: Readable, stdout: Writable) {
+export async function main(stdin: Readable, stdout: Writable) {
   const transport = new StdioServerTransport(stdin, stdout);
   await server.connect(transport);
   console.error("Faker MCP server running on stdio");

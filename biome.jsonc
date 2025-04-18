@@ -1,0 +1,56 @@
+{
+    "organizeImports": {
+      "enabled": true
+    },
+    "formatter": {
+      "enabled": true,
+      "formatWithErrors": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 120
+    },
+    "javascript": {
+      "formatter": {
+        "enabled": true,
+        "quoteStyle": "double",
+        "jsxQuoteStyle": "double",
+        "trailingCommas": "all",
+        "semicolons": "asNeeded",
+        "arrowParentheses": "always",
+        "quoteProperties": "asNeeded"
+      }
+    },
+    "linter": {
+      "enabled": true,
+      "rules": {
+        "nursery": {
+          "useImportRestrictions": {
+            "level": "off"
+          }
+        },
+        "style": {
+          "useImportType": "error",
+          "noDefaultExport": "error",
+          "useTemplate": "off",
+          "noUnusedTemplateLiteral": "off"
+        },
+        "correctness": {
+          "noUnusedImports": "off"
+        },
+        "suspicious": {
+          "noImplicitAnyLet": "error"
+        },
+        "complexity": {
+          "useLiteralKeys": "off"
+        }
+      }
+    },
+    "json": {
+      "formatter": {
+        "lineWidth": 80,
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 2
+      }
+    }
+}
