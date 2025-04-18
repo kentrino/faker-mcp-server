@@ -1,26 +1,14 @@
 import { describe, it, expect, vi } from "vitest"
 import { Duplex, PassThrough, Readable, Writable } from "node:stream"
 import { main } from "../../src/index"
+import { Output } from "../util/Output"
 
-class Output extends Writable {
-  data: Buffer = Buffer.alloc(0)
-
-  constructor() {
-    super({
-      write: (chunk: Buffer, encoding: BufferEncoding, callback: (error?: Error | null) => void): void => {
-        console.log("chunk ------", chunk)
-        this.data = Buffer.concat([this.data, chunk])
-        callback()
-      },
-    })
-  }
-}
-
-describe("Main Integration Test", () => {
-  it("should start the server and handle requests", async () => {
+describe("main", () => {
+  it("should handle requests", async () => {
     const stdin = new PassThrough()
     const stdout = new Output()
-    const serverPromise = main(stdin, stdout)
+
+    await main(stdin, stdout)
 
     const req = {
       jsonrpc: "2.0",
@@ -31,29 +19,15 @@ describe("Main Integration Test", () => {
         arguments: {},
       },
     }
-
-    // Write the request to stdin
     stdin.write(JSON.stringify(req) + "\n")
 
-    // Wait for the response to be processed
-    await new Promise((resolve) => {
-      const checkInterval = setInterval(() => {
-        if (stdout.data.length > 0) {
-          clearInterval(checkInterval)
-          resolve(true)
-        }
-      }, 50)
+    // Wait for a complete response
+    const responseData = await stdout.waitForCompleteJson()
 
-      // Timeout after 2 seconds
-      setTimeout(() => {
-        clearInterval(checkInterval)
-        resolve(false)
-      }, 2000)
-    })
-    await serverPromise
+    // Parse the response only after we have a complete JSON
+    const response = JSON.parse(responseData.toString())
 
-    const response = JSON.parse(stdout.data.toString())
-
+    // Validate the response
     expect(response.jsonrpc).toBe("2.0")
     expect(response.id).toBe("1")
     expect(response.result).toBeDefined()
