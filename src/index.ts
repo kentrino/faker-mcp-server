@@ -3,7 +3,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import type { Readable, Writable } from "node:stream"
 import chalk, { Chalk } from "chalk"
-import { createFakerServer } from "./createToolServer.js"
+import { createFakerServer } from "./createFakerServer.js"
 
 /**
  * Start the server using stdio transport.
