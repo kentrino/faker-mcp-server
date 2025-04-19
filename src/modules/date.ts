@@ -487,6 +487,121 @@ export function date(): Parameters<ToolServer["register"]>[0] {
       },
     )
     .method(
+      "past",
+      "Generates a random date in the past.",
+      z.object({
+        years: z.number().optional().describe("The range of years the date may be in the past."),
+        refDate: refDateSchema,
+      }),
+      (input) => {
+        return faker.date.past(input).toISOString()
+      },
+    )
+    .method(
+      "future",
+      "Generates a random date in the future.",
+      z.object({
+        years: z.number().optional().describe("The range of years the date may be in the future."),
+        refDate: refDateSchema,
+      }),
+      (input) => {
+        return faker.date.future(input).toISOString()
+      },
+    )
+    .method(
+      "between",
+      "Generates a random date between the given boundaries.",
+      z.object({
+        from: z.string().describe("The early date boundary."),
+        to: z.string().describe("The late date boundary."),
+      }),
+      (input) => {
+        return faker.date.between(input).toISOString()
+      },
+    )
+    .method(
+      "betweens",
+      "Generates random dates between the given boundaries. The dates will be returned in an array sorted in chronological order.",
+      z.object({
+        from: z.string().describe("The early date boundary."),
+        to: z.string().describe("The late date boundary."),
+        count: z
+          .union([
+            z.number(),
+            z.object({
+              min: z.number().describe("The minimum number of dates to generate."),
+              max: z.number().describe("The maximum number of dates to generate."),
+            }),
+          ])
+          .optional()
+          .describe("The number of dates to generate."),
+      }),
+      (input) => {
+        // Convert the array of dates to a JSON string to satisfy the return type
+        return faker.date
+          .betweens(input)
+          .map((date) => date.toISOString())
+          .join(", ")
+      },
+    )
+    .method(
+      "recent",
+      "Generates a random date in the recent past.",
+      z.object({
+        days: z.number().optional().describe("The range of days the date may be in the past."),
+        refDate: refDateSchema,
+      }),
+      (input) => {
+        return faker.date.recent(input).toISOString()
+      },
+    )
+    .method(
+      "soon",
+      "Generates a random date in the near future.",
+      z.object({
+        days: z.number().optional().describe("The range of days the date may be in the future."),
+        refDate: refDateSchema,
+      }),
+      (input) => {
+        return faker.date.soon(input).toISOString()
+      },
+    )
+    .method(
+      "month",
+      "Returns a random name of a month.",
+      z.object({
+        abbreviated: z.boolean().optional().describe("Whether to return an abbreviation."),
+        context: z
+          .boolean()
+          .optional()
+          .describe(
+            "Whether to return the name of a month in the context of a date. In some locales this may affect grammar or capitalization.",
+          ),
+      }),
+      (input) => {
+        return faker.date.month(input)
+      },
+    )
+    .method(
+      "weekday",
+      "Returns a random day of the week.",
+      z.object({
+        abbreviated: z.boolean().optional().describe("Whether to return an abbreviation."),
+        context: z
+          .boolean()
+          .optional()
+          .describe(
+            "Whether to return the day of the week in the context of a date. In some locales this may affect grammar or capitalization.",
+          ),
+      }),
+      (input) => {
+        return faker.date.weekday(input)
+      },
+    )
+    .method("timeZone", "Returns a random IANA time zone name.", z.object({}), () => {
+      return faker.date.timeZone()
+    })
+    .method(
       "birthdate",
       `Returns a random birthdate. By default, the birthdate is generated for an adult between 18 and 80 years old.
         * But you can customize the 'age' range or the 'year' range to generate a more specific birthdate.`,
