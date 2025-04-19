@@ -12,26 +12,27 @@ describe("main", () => {
   })
 
   it("should handle requests", async () => {
-    const response = await run(main, "tools/call", "generate_lorem", {})
+    const response = await run(main, "tools/call", "generate_lorem", {
+      method: "lines",
+      args: {},
+    })
 
     expect(response.jsonrpc).toBe("2.0")
     expect(response.id).toBe("1")
     expect(response.result).toBeDefined()
     expect(response.result.content).toBeDefined()
     expect(response.result.content[0].type).toBe("text")
-    expect(response.result.content[0].text).toMatch(/^Suppellex a cognatus arca aliquam audentia\..+/)
+    expect(response.result.content[0].text).toMatch(/^A cognatus arca aliquam audentia.+/)
   })
 
   it("should generate food", async () => {
     faker.seed(1)
-    const response = await run(main, "tools/call", "generate_food", {})
+    const response = await run(main, "tools/call", "generate_food", {
+      method: "dish",
+      args: {},
+    })
     expect(response.result.content[0].type).toBe("text")
-    expect(JSON.parse(response.result.content[0].text).dish).toEqual("Emu With Blackberry Sauce")
-  })
-
-  it("should generate food with fields", async () => {
-    const response = await run(main, "tools/call", "generate_food", { fields: ["dish"] })
-    expect(JSON.parse(response.result.content[0].text).dish).toEqual("Emu With Blackberry Sauce")
+    expect(response.result.content[0].text).toEqual("Emu With Blackberry Sauce")
   })
 
   it("should generate date", async () => {

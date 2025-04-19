@@ -14,7 +14,7 @@ export class ModuleBuilder {
     }
     this.inputs[name] = z.object({
       method: z.literal(name).describe(description),
-      args,
+      args: args.optional(),
     })
     this.handlers[name] = handler
     return this

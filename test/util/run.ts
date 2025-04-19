@@ -40,5 +40,14 @@ export async function run(main: typeof mainFn, method: string, name: string, arg
 
   // Parse the response only after we have a complete JSON
   const response = JSON.parse(responseData.toString())
-  return Response.parse(response)
+  try {
+    return Response.parse(response)
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      console.error("response could not be parsed", e.format(), {
+        original: response,
+      })
+    }
+    throw e
+  }
 }
