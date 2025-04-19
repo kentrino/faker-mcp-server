@@ -20,7 +20,7 @@ export function image(): Parameters<ToolServer["register"]>[0] {
       z.object({
         sex: SexTypeEnum.optional().describe("The sex of the person for the avatar. Can be 'female' or 'male'."),
         size: z
-          .enum(["512", "256", "128", "64", "32"])
+          .union([z.literal(512), z.literal(256), z.literal(128), z.literal(64), z.literal(32)])
           .optional()
           .describe("The size of the image. Can be 512, 256, 128, 64 or 32."),
       }),
