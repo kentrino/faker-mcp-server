@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker"
 import type { ToolServer } from "../ToolServer.js"
 import { z } from "zod"
+import { ModuleBuilder } from "../ModuleBuilder.js"
 
 // /**
 //  * Module to generate dates (without methods requiring localized data).
@@ -475,55 +476,31 @@ export function date(): Parameters<ToolServer["register"]>[0] {
     .string()
     .optional()
     .describe("The date to use as reference point for the newly generated date.")
-  return {
-    name: "generate_date",
-    description: "Generate fake dates",
-    input: z.union([
-      z.object({
-        method: z
-          .literal("anytime")
-          .describe("Generates a random date that can be either in the past or in the future."),
-        args: z.object({
-          refDate: refDateSchema,
-        }),
-      }),
-      z.object({
-        method: z.literal("birthdate"),
-        args: z.union([
-          z.object({
-            refDate: refDateSchema,
-          }),
-          z.object({
-            mode: z.literal("age"),
-            min: z.number(),
-            max: z.number(),
-            refDate: refDateSchema.optional(),
-          }),
-          z.object({
-            mode: z.literal("year"),
-            min: z.number(),
-            max: z.number(),
-          }),
-        ]),
-      }),
-    ]),
-    handler: async (input) => {
-      let result: Date = new Date()
-      if (input.method === "anytime") {
-        result = faker.date.anytime(input.args)
-      }
-      if (input.method === "birthdate") {
-        result = faker.date.birthdate(input.args)
-      }
 
-      return {
-        content: [
-          {
-            type: "text",
-            text: result.toISOString(),
-          },
-        ],
-      }
-    },
-  }
+  return new ModuleBuilder()
+    .method(
+      "anytime",
+      "Generates a random date that can be either in the past or in the future.",
+      z.object({ refDate: refDateSchema }),
+      (input) => {
+        return faker.date.anytime(input).toISOString()
+      },
+    )
+    .method(
+      "birthdate",
+      `Returns a random birthdate. By default, the birthdate is generated for an adult between 18 and 80 years old.
+        * But you can customize the 'age' range or the 'year' range to generate a more specific birthdate.`,
+      z.union([
+        z.object({ refDate: refDateSchema }),
+        z.object({ mode: z.literal("age"), min: z.number(), max: z.number(), refDate: refDateSchema }),
+        z.object({ mode: z.literal("year"), min: z.number(), max: z.number() }),
+      ]),
+      (input) => {
+        return faker.date.birthdate(input).toISOString()
+      },
+    )
+    .build({
+      name: "generate_date",
+      description: "Generate fake dates",
+    })
 }
