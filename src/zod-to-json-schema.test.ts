@@ -7,6 +7,7 @@ describe("zod-to-json-schema", () => {
     const schema = zodToJsonSchema(
       z.object({
         name: z.string(),
+        foo: z.enum(["bar"]),
       }),
     )
 
@@ -17,8 +18,12 @@ describe("zod-to-json-schema", () => {
         name: {
           type: "string",
         },
+        foo: {
+          enum: ["bar"],
+          type: "string",
+        },
       },
-      required: ["name"],
+      required: ["name", "foo"],
       type: "object",
     })
   })
