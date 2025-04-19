@@ -2,8 +2,6 @@ import { z } from "zod"
 import type { ServerBuilder } from "./ServerBuilder.js"
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 
-type UnknownZodShape = Record<string, z.ZodTypeAny>
-
 export class ModuleBuilder {
   handlers: Record<string, (args: never) => string> = {}
   args: Record<string, z.ZodTypeAny> = {}

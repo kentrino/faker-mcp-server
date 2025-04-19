@@ -28,18 +28,8 @@ import { system } from "./modules/system.js"
 import { vehicle } from "./modules/vehicle.js"
 import { word } from "./modules/word.js"
 
-export function createFakerServer() {
-  const server = new McpServer(
-    {
-      name: "faker-server",
-      version: "0.1.0",
-    },
-    {
-      capabilities: {
-        tools: {},
-      },
-    },
-  )
+export function createFakerServer(...args: ConstructorParameters<typeof McpServer>) {
+  const server = new McpServer(...args)
   airline(server)
   animal(server)
   book(server)

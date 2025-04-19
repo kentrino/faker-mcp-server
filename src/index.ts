@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+import chalk from "chalk"
 import type { Readable, Writable } from "node:stream"
-import chalk, { Chalk } from "chalk"
 import { createFakerServer } from "./createFakerServer.js"
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
-import { animal } from "./modules/animal.tool.js"
-import { airline } from "./modules/airline.tool.js"
 
 /**
  * Start the server using stdio transport.
@@ -14,7 +11,17 @@ import { airline } from "./modules/airline.tool.js"
  */
 export async function main(stdin: Readable, stdout: Writable) {
   const transport = new StdioServerTransport(stdin, stdout)
-  const server = await createFakerServer()
+  const server = createFakerServer(
+    {
+      name: "faker-server",
+      version: "0.1.0",
+    },
+    {
+      capabilities: {
+        tools: {},
+      },
+    },
+  )
   await server.connect(transport)
   console.error(chalk.gray("Faker MCP server running on stdio"))
 }
