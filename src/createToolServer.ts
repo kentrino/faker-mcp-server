@@ -7,6 +7,7 @@ import { z } from "zod"
 import { ToolServer } from "./ToolServer.js"
 import { faker } from "@faker-js/faker"
 import { fieldSchemaOf } from "./fieldSchemaOf.js"
+import { date } from "./modules/date.js"
 
 // Define common input schemas
 const localeSchema = z.string().optional().describe("The locale to use (e.g., 'en', 'ja', 'fr'). Defaults to 'en'.")
@@ -33,7 +34,6 @@ const dateTypeSchema = z
   .string()
   .optional()
   .describe("The type of date to generate (past, future, recent, soon, between). Defaults to 'recent'.")
-const dateRefSchema = z.string().optional().describe("The reference date as ISO string. Defaults to now.")
 
 const numberMinSchema = z
   .number()
@@ -151,49 +151,7 @@ export function createToolServer() {
     },
   })
 
-  // Date module
-  toolServer.register({
-    name: "generate_date",
-    description: "Generate fake dates",
-    input: z.object({
-      type: dateTypeSchema,
-      refDate: dateRefSchema,
-    }),
-    handler: async (input) => {
-      const type = input.type || "recent"
-      const refDate = input.refDate
-
-      let result: Date
-
-      const referenceDate = refDate ? new Date(refDate) : undefined
-
-      switch (type) {
-        case "past":
-          result = faker.date.past({ refDate: referenceDate })
-          break
-        case "future":
-          result = faker.date.future({ refDate: referenceDate })
-          break
-        case "recent":
-          result = faker.date.recent({ refDate: referenceDate })
-          break
-        case "soon":
-          result = faker.date.soon({ refDate: referenceDate })
-          break
-        default:
-          result = faker.date.recent()
-      }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: result.toISOString(),
-          },
-        ],
-      }
-    },
-  })
+  toolServer.register(date())
 
   // Commerce module
   toolServer.register({

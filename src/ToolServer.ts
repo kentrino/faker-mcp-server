@@ -22,7 +22,7 @@ export class ToolServer {
   handlers: Record<string, Handler<UnknownZodObject>> = {}
   inputs: Record<string, ListToolsResult["tools"][number]> = {}
 
-  register<T extends z.ZodObject<UnknownZodShape>>(opts: {
+  register<T extends z.ZodTypeAny>(opts: {
     name: string
     description: string
     input: T
