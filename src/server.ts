@@ -7,6 +7,8 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { CallToolRequestSchema, ListToolsRequestSchema, ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js"
 import { faker } from "@faker-js/faker"
+import { zodToJsonSchema } from "zod-to-json-schema"
+import { z } from "zod"
 
 // Define interfaces for the tool arguments
 interface BaseArgs {
@@ -59,26 +61,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "generate_person",
         description: "Generate fake person data (names, job titles, etc.)",
-        inputSchema: {
-          type: "object",
-          properties: {
-            locale: {
-              type: "string",
-              description: "The locale to use (e.g., 'en', 'ja', 'fr'). Defaults to 'en'.",
-            },
-            fields: {
-              type: "array",
-              description:
-                "The fields to generate (e.g., 'firstName', 'lastName', 'fullName', 'gender', 'jobTitle'). If empty, all fields will be generated.",
-              items: {
-                type: "string",
-              },
-            },
-          },
-        },
+        inputSchema: zodToJsonSchema(
+          z.union([
+            z.object({
+              a: z.string(),
+            }),
+            z.object({
+              b: z.number(),
+            }),
+          ]),
+        ),
       },
-
-      // Lorem module
       {
         name: "generate_lorem",
         description: "Generate fake lorem ipsum text",
