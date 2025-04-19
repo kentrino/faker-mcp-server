@@ -872,39 +872,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         // Generate only the requested fields
         for (const field of fields) {
           try {
-            // Try to access the field on the module using type-safe approach
-            switch (moduleName) {
-              case "airline":
-                if (
-                  field in faker.airline &&
-                  typeof faker.airline[field as keyof typeof faker.airline] === "function"
-                ) {
-                  const value = faker.airline[field as keyof typeof faker.airline]()
-                  result[field] = String(value)
-                } else {
-                  result[field] = `Unknown field: ${field}`
-                }
-                break
-              case "animal":
-                if (field in faker.animal && typeof faker.animal[field as keyof typeof faker.animal] === "function") {
-                  const value = faker.animal[field as keyof typeof faker.animal]()
-                  result[field] = String(value)
-                } else {
-                  result[field] = `Unknown field: ${field}`
-                }
-                break
-              case "color":
-                if (field in faker.color && typeof faker.color[field as keyof typeof faker.color] === "function") {
-                  const value = faker.color[field as keyof typeof faker.color]()
-                  result[field] = String(value)
-                } else {
-                  result[field] = `Unknown field: ${field}`
-                }
-                break
-              default:
-                result[field] = `Unknown module or field: ${moduleName}.${field}`
+            const module = (faker as unknown as Record<string, Record<string, (() => string) | undefined> | undefined>)[
+              moduleName
+            ]
+            if (!module) {
+              throw new Error(`Module ${moduleName} not found`)
             }
-            // result[field] = `Unknown field: ${field}`
+            const generator = module[field]
+            if (!generator) {
+              throw new Error(`Field ${field} not found `)
+            }
+            result[field] = generator()
           } catch (error) {
             result[field] = `Error generating field: ${field}`
           }

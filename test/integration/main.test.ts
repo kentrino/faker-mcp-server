@@ -25,4 +25,11 @@ describe("main", () => {
     expect(response.result.content[0].type).toBe("text")
     expect(JSON.parse(response.result.content[0].text).dish).toEqual("Emu With Blackberry Sauce")
   })
+
+  it("should generate food with fields", async () => {
+    faker.seed(1)
+    const response = await run(main, "tools/call", "generate_food", { fields: ["dish"] })
+    expect(response.result.content[0].type).toBe("text")
+    expect(JSON.parse(response.result.content[0].text).dish).toEqual("Emu With Blackberry Sauce")
+  })
 })
