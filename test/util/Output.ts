@@ -3,17 +3,16 @@ import { isJsonValid } from "./isJsonValid"
 
 export class Output extends Writable {
   data: Buffer = Buffer.alloc(0)
-  private completeResponsePromise: Promise<Buffer> | null = null
-  private resolveResponse: ((data: Buffer) => void) | null = null
+  private completedPromise: Promise<Buffer> | null = null
+  private resolve: ((data: Buffer) => void) | null = null
 
   constructor() {
     super({
       write: (chunk: Buffer, encoding: BufferEncoding, callback: (error?: Error | null) => void): void => {
         this.data = Buffer.concat([this.data, chunk])
-
-        if (this.resolveResponse && isJsonValid(this.data.toString())) {
-          this.resolveResponse(this.data)
-          this.resolveResponse = null
+        if (this.resolve && isJsonValid(this.data.toString())) {
+          this.resolve(this.data)
+          this.resolve = null
         }
 
         callback()
@@ -33,23 +32,23 @@ export class Output extends Writable {
     }
 
     // If we're already waiting for a response, return the existing promise
-    if (this.completeResponsePromise) {
-      return this.completeResponsePromise
+    if (this.completedPromise) {
+      return this.completedPromise
     }
 
     // Create a new promise that will resolve when we get a complete response
-    this.completeResponsePromise = new Promise<Buffer>((resolve, reject) => {
-      this.resolveResponse = resolve
+    this.completedPromise = new Promise<Buffer>((resolve, reject) => {
+      this.resolve = resolve
 
       // Set a timeout to reject the promise if we don't get a complete response
       setTimeout(() => {
-        if (this.resolveResponse) {
-          this.resolveResponse = null
+        if (this.resolve) {
+          this.resolve = null
           reject(new Error(`Timeout waiting for complete response after ${timeout}ms`))
         }
       }, timeout)
     })
 
-    return this.completeResponsePromise
+    return this.completedPromise
   }
 }
