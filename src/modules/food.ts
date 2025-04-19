@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function food(): Parameters<ToolServer["register"]>[0] {
+export function food(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("adjective", "Generates a random dish adjective.", z.object({}), () => {
       return faker.food.adjective()

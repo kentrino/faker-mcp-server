@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function lorem(): Parameters<ToolServer["register"]>[0] {
+export function lorem(): Parameters<ServerBuilder["register"]>[0] {
   // Define the strategy enum for the word method
   const StrategyEnum = z.enum(["fail", "closest", "shortest", "longest", "any-length"])
 

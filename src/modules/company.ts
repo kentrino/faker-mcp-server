@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function company(): Parameters<ToolServer["register"]>[0] {
+export function company(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("name", "Generates a random company name.", z.object({}), () => {
       return faker.company.name()

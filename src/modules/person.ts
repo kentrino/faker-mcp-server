@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
@@ -7,7 +7,7 @@ import { ModuleBuilder } from "../ModuleBuilder.js"
 const SexTypeEnum = z.enum(["female", "male"])
 type SexType = z.infer<typeof SexTypeEnum>
 
-export function person(): Parameters<ToolServer["register"]>[0] {
+export function person(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method(
       "firstName",

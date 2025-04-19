@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
@@ -471,7 +471,7 @@ import { ModuleBuilder } from "../ModuleBuilder.js"
 //   timeZone(): string
 // }
 
-export function date(): Parameters<ToolServer["register"]>[0] {
+export function date(): Parameters<ServerBuilder["register"]>[0] {
   const refDateSchema = z
     .string()
     .optional()

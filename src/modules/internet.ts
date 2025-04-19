@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function internet(): Parameters<ToolServer["register"]>[0] {
+export function internet(): Parameters<ServerBuilder["register"]>[0] {
   // Define the custom types
   const EmojiTypeEnum = z.enum([
     "smiley",

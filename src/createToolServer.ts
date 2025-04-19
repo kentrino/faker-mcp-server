@@ -3,10 +3,6 @@
  * It implements tools for all Faker.js modules to generate various types of fake data.
  */
 
-import { z } from "zod"
-import { ToolServer } from "./ToolServer.js"
-import { faker } from "@faker-js/faker"
-import { fieldSchemaOf } from "./fieldSchemaOf.js"
 import { airline } from "./modules/airline.js"
 import { animal } from "./modules/animal.js"
 import { book } from "./modules/book.js"
@@ -30,9 +26,10 @@ import { science } from "./modules/science.js"
 import { system } from "./modules/system.js"
 import { vehicle } from "./modules/vehicle.js"
 import { word } from "./modules/word.js"
+import { ServerBuilder } from "./ToolServer.js"
 
 export function createToolServer() {
-  const toolServer = new ToolServer()
+  const toolServer = new ServerBuilder()
 
   toolServer.register(airline())
   toolServer.register(animal())

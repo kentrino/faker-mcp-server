@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function science(): Parameters<ToolServer["register"]>[0] {
+export function science(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("chemicalElement", "Returns a random periodic table element.", z.object({}), () => {
       // Convert the object to a JSON string since ModuleBuilder expects string return values

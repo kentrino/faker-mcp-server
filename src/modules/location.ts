@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function location(): Parameters<ToolServer["register"]>[0] {
+export function location(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("buildingNumber", "Generates a random building number.", z.object({}), () => {
       return faker.location.buildingNumber()

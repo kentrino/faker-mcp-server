@@ -1,5 +1,5 @@
 import { z } from "zod"
-import type { ToolServer } from "./ToolServer.js"
+import type { ServerBuilder } from "./ToolServer.js"
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 
 type UnknownZodShape = Record<string, z.ZodTypeAny>
@@ -26,7 +26,7 @@ export class ModuleBuilder {
   }: {
     name: string
     description: string
-  }): Parameters<ToolServer["register"]>[0] {
+  }): Parameters<ServerBuilder["register"]>[0] {
     return {
       name,
       description,

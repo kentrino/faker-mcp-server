@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function system(): Parameters<ToolServer["register"]>[0] {
+export function system(): Parameters<ServerBuilder["register"]>[0] {
   // Define the common count schema that can be either a number or a min/max object
   const countSchema = <T extends z.ZodTypeAny>(schema: T) =>
     z.union([

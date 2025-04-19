@@ -18,7 +18,7 @@ type Handler<T extends z.ZodObject<UnknownZodShape>> = (input: z.infer<T>) => Pr
 
 type ConstructorParameters<T> = T extends new (...args: infer P) => infer R ? P : never
 
-export class ToolServer {
+export class ServerBuilder {
   handlers: Record<string, Handler<UnknownZodObject>> = {}
   inputs: Record<string, ListToolsResult["tools"][number]> = {}
 

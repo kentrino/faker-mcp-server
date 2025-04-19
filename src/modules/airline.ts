@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function airline(): Parameters<ToolServer["register"]>[0] {
+export function airline(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("airport", "Generates a random airport.", z.object({}), () => {
       const airport = faker.airline.airport()

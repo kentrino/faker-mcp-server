@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function database(): Parameters<ToolServer["register"]>[0] {
+export function database(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("column", "Returns a random database column name.", z.object({}), () => {
       return faker.database.column()

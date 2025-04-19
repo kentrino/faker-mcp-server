@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function image(): Parameters<ToolServer["register"]>[0] {
+export function image(): Parameters<ServerBuilder["register"]>[0] {
   // Define the SexType enum for use in the personPortrait method
   const SexTypeEnum = z.enum(["female", "male"])
 

@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function git(): Parameters<ToolServer["register"]>[0] {
+export function git(): Parameters<ServerBuilder["register"]>[0] {
   const refDateSchema = z.string().optional().describe("The date to use as reference point for the commit.")
 
   return new ModuleBuilder()

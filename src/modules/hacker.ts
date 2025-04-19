@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function hacker(): Parameters<ToolServer["register"]>[0] {
+export function hacker(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("abbreviation", "Returns a random hacker/IT abbreviation.", z.object({}), () => {
       return faker.hacker.abbreviation()

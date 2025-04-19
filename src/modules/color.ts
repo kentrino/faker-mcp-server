@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function color(): Parameters<ToolServer["register"]>[0] {
+export function color(): Parameters<ServerBuilder["register"]>[0] {
   // Define common schemas
   const casingSchema = z
     .enum(["lower", "upper", "mixed"])

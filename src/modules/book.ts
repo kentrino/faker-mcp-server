@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function book(): Parameters<ToolServer["register"]>[0] {
+export function book(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("author", "Returns a random author name.", z.object({}), () => {
       return faker.book.author()

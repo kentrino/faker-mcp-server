@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
-import type { ToolServer } from "../ToolServer.js"
+import type { ServerBuilder } from "../ToolServer.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
-export function music(): Parameters<ToolServer["register"]>[0] {
+export function music(): Parameters<ServerBuilder["register"]>[0] {
   return new ModuleBuilder()
     .method("album", "Returns a random album name.", z.object({}), () => {
       return faker.music.album()
