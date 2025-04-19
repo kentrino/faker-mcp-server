@@ -26,7 +26,7 @@ import { science } from "./modules/science.js"
 import { system } from "./modules/system.js"
 import { vehicle } from "./modules/vehicle.js"
 import { word } from "./modules/word.js"
-import { ServerBuilder } from "./ToolServer.js"
+import { ServerBuilder } from "./ServerBuilder.js"
 
 export function createFakerServer() {
   const toolServer = new ServerBuilder()

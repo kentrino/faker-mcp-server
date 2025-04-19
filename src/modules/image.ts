@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import type { ServerBuilder } from "../ToolServer.js"
+import type { ServerBuilder } from "../ServerBuilder.js"
 import { z } from "zod"
 import { ModuleBuilder } from "../ModuleBuilder.js"
 
