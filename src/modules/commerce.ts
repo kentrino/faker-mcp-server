@@ -36,6 +36,7 @@ export function commerce(): Parameters<ServerBuilder["register"]>[0] {
     .method("productDescription", "Returns a product description.", z.object({}), () => {
       return faker.commerce.productDescription()
     })
+
     .method(
       "isbn",
       "Returns a random ISBN identifier.",
