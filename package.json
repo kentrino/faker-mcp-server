@@ -7,18 +7,15 @@
   "bin": {
     "faker-server": "./build/index.js"
   },
-  "files": [
-    "build"
-  ],
+  "files": ["build"],
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "build": "rimraf build && tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "test:integration": "vitest run test/integration"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
@@ -31,6 +28,7 @@
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^20.11.24",
     "@vitest/coverage-v8": "^3.1.1",
+    "rimraf": "^6.0.1",
     "typescript": "^5.3.3",
     "vitest": "^3.1.1"
   }
