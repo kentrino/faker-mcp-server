@@ -9,6 +9,7 @@ import { faker } from "@faker-js/faker"
 import { fieldSchemaOf } from "./fieldSchemaOf.js"
 import { date } from "./modules/date.js"
 import { airline } from "./modules/airline.js"
+import { animal } from "./modules/animal.js"
 
 // Define common input schemas
 const localeSchema = z.string().optional().describe("The locale to use (e.g., 'en', 'ja', 'fr'). Defaults to 'en'.")
@@ -205,51 +206,7 @@ export function createToolServer() {
   toolServer.register(airline())
 
   // Animal module
-  toolServer.register({
-    name: "generate_animal",
-    description: "Generate fake animal data",
-    input: z.object({
-      fields: fieldsSchema.describe(
-        "The fields to generate (e.g., 'type', 'dog', 'cat', 'bird', 'insect', 'bear'). If empty, all fields will be generated.",
-      ),
-    }),
-    handler: async (input) => {
-      const fields = input.fields || []
-      const result: Record<string, string> = {}
-
-      if (fields.length === 0) {
-        result.type = faker.animal.type()
-        result.dog = faker.animal.dog()
-        result.cat = faker.animal.cat()
-        result.bird = faker.animal.bird()
-        result.cow = faker.animal.cow()
-        result.horse = faker.animal.horse()
-        result.insect = faker.animal.insect()
-      } else {
-        for (const field of fields) {
-          try {
-            const generator = faker.animal[field as keyof typeof faker.animal]
-            if (typeof generator === "function") {
-              result[field] = generator()
-            } else {
-              result[field] = `Unknown field: ${field}`
-            }
-          } catch (error) {
-            result[field] = `Error generating field: ${field}`
-          }
-        }
-      }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      }
-    },
-  })
+  toolServer.register(animal())
 
   // Color module
   toolServer.register({
