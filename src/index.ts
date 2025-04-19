@@ -13,21 +13,8 @@ import { airline } from "./modules/airline.tool.js"
  * This allows the server to communicate via standard input/output streams.
  */
 export async function main(stdin: Readable, stdout: Writable) {
-  const transport = new StdioServerTransport()
-  // const server = await createFakerServer()
-  const server = new McpServer(
-    {
-      name: "faker-server",
-      version: "0.1.0",
-    },
-    {
-      capabilities: {
-        tools: {},
-      },
-    },
-  )
-  animal(server)
-  airline(server)
+  const transport = new StdioServerTransport(stdin, stdout)
+  const server = await createFakerServer()
   await server.connect(transport)
   console.error(chalk.gray("Faker MCP server running on stdio"))
 }

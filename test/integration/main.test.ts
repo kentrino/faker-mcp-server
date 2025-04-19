@@ -12,9 +12,8 @@ describe("main", () => {
   })
 
   it("should handle requests", async () => {
-    const response = await run(main, "tools/call", "generate_lorem", {
-      method: "lines",
-      args: {},
+    const response = await run(main, "tools/call", "lorem-lines", {
+      count: 1,
     })
 
     expect(response.jsonrpc).toBe("2.0")
@@ -27,23 +26,19 @@ describe("main", () => {
 
   it("should generate food", async () => {
     faker.seed(1)
-    const response = await run(main, "tools/call", "generate_food", {
-      method: "dish",
-      args: {},
-    })
+    const response = await run(main, "tools/call", "food-dish", {})
     expect(response.result.content[0].type).toBe("text")
     expect(response.result.content[0].text).toEqual("Emu With Blackberry Sauce")
   })
 
   it("should generate date", async () => {
-    const response = await run(main, "tools/call", "generate_date", { method: ["anytime"] })
+    const response = await run(main, "tools/call", "date-anytime", {})
     expect(response.result.content[0].text).toEqual("2024-12-19T01:22:50.671Z")
   })
 
   it("should generate airline.flightNumber", async () => {
-    const response = await run(main, "tools/call", "generate_airline", {
-      method: ["flightNumber"],
-      args: { length: { min: 1, max: 4 } },
+    const response = await run(main, "tools/call", "airline-flightNumber", {
+      length: { min: 1, max: 4 },
     })
     expect(response.result.content[0].text).toEqual("70")
   })

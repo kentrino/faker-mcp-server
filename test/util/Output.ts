@@ -25,7 +25,7 @@ export class Output extends Writable {
    * @param timeout Timeout in milliseconds
    * @returns Promise that resolves with the complete response data
    */
-  waitForCompleteJson(timeout = 2000): Promise<Buffer> {
+  waitForCompleteJson(timeout = 200): Promise<Buffer> {
     // If we already have a complete response, return it immediately
     if (isJsonValid(this.data.toString())) {
       return Promise.resolve(this.data)
