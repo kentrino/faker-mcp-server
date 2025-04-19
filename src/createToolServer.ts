@@ -28,7 +28,7 @@ import { vehicle } from "./modules/vehicle.js"
 import { word } from "./modules/word.js"
 import { ServerBuilder } from "./ToolServer.js"
 
-export function createToolServer() {
+export function createFakerServer() {
   const toolServer = new ServerBuilder()
 
   toolServer.register(airline())

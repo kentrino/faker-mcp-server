@@ -3,7 +3,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import type { Readable, Writable } from "node:stream"
 import chalk, { Chalk } from "chalk"
-import { createToolServer } from "./createToolServer.js"
+import { createFakerServer } from "./createToolServer.js"
 
 /**
  * Start the server using stdio transport.
@@ -11,7 +11,7 @@ import { createToolServer } from "./createToolServer.js"
  */
 export async function main(stdin: Readable, stdout: Writable) {
   const transport = new StdioServerTransport(stdin, stdout)
-  const server = await createToolServer()
+  const server = await createFakerServer()
   await server.connect(transport)
   console.error(chalk.gray("Faker MCP server running on stdio"))
 }
