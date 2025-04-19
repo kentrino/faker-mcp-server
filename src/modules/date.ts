@@ -471,13 +471,24 @@ import { z } from "zod"
 // }
 
 export function date(): Parameters<ToolServer["register"]>[0] {
-  const refDateSchema = z.string().optional().describe("The reference date as ISO string. Defaults to now.")
+  const refDateSchema = z
+    .string()
+    .optional()
+    .describe("The date to use as reference point for the newly generated date.")
   return {
     name: "generate_date",
     description: "Generate fake dates",
     input: z.union([
       z.object({
-        field: z.literal("birthdate"),
+        method: z
+          .literal("anytime")
+          .describe("Generates a random date that can be either in the past or in the future."),
+        args: z.object({
+          refDate: refDateSchema,
+        }),
+      }),
+      z.object({
+        method: z.literal("birthdate"),
         args: z.union([
           z.object({
             refDate: refDateSchema,
@@ -495,14 +506,13 @@ export function date(): Parameters<ToolServer["register"]>[0] {
           }),
         ]),
       }),
-      z.object({
-        field: z.literal("between"),
-        refDate: z.string().optional().describe("The reference date as ISO string. Defaults to now."),
-      }),
     ]),
     handler: async (input) => {
       let result: Date = new Date()
-      if (input.field === "birthdate") {
+      if (input.method === "anytime") {
+        result = faker.date.anytime(input.args)
+      }
+      if (input.method === "birthdate") {
         result = faker.date.birthdate(input.args)
       }
 
