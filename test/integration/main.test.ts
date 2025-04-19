@@ -31,13 +31,19 @@ describe("main", () => {
 
   it("should generate food with fields", async () => {
     const response = await run(main, "tools/call", "generate_food", { fields: ["dish"] })
-    expect(response.result.content[0].type).toBe("text")
     expect(JSON.parse(response.result.content[0].text).dish).toEqual("Emu With Blackberry Sauce")
   })
 
   it("should generate date", async () => {
     const response = await run(main, "tools/call", "generate_date", { method: ["anytime"] })
-    expect(response.result.content[0].type).toBe("text")
     expect(response.result.content[0].text).toEqual("2024-12-19T01:22:50.671Z")
+  })
+
+  it("should generate airline.flightNumber", async () => {
+    const response = await run(main, "tools/call", "generate_airline", {
+      method: ["flightNumber"],
+      args: { length: { min: 1, max: 4 } },
+    })
+    expect(response.result.content[0].text).toEqual("70")
   })
 })

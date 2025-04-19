@@ -8,6 +8,7 @@ import { ToolServer } from "./ToolServer.js"
 import { faker } from "@faker-js/faker"
 import { fieldSchemaOf } from "./fieldSchemaOf.js"
 import { date } from "./modules/date.js"
+import { airline } from "./modules/airline.js"
 
 // Define common input schemas
 const localeSchema = z.string().optional().describe("The locale to use (e.g., 'en', 'ja', 'fr'). Defaults to 'en'.")
@@ -201,55 +202,7 @@ export function createToolServer() {
   })
 
   // Airline module
-  toolServer.register({
-    name: "generate_airline",
-    description: "Generate fake airline data",
-    input: z.object({
-      fields: fieldsSchema.describe(
-        "The fields to generate (e.g., 'airline', 'airplane', 'airport', 'flightNumber', 'recordLocator'). If empty, all fields will be generated.",
-      ),
-    }),
-    handler: async (input) => {
-      const fields = input.fields || []
-      const result: Record<string, string> = {}
-
-      if (fields.length === 0) {
-        result.airline = faker.airline.airline().name
-        result.airplane = faker.airline.airplane().name
-        result.airport = faker.airline.airport().name
-        result.flightNumber = faker.airline.flightNumber()
-        result.recordLocator = faker.airline.recordLocator()
-      } else {
-        for (const field of fields) {
-          try {
-            const generator = faker.airline[field as keyof typeof faker.airline]
-            if (typeof generator === "function") {
-              if (field === "airline" || field === "airplane" || field === "airport") {
-                const value = generator()
-                result[field] =
-                  typeof value === "object" && value !== null && "name" in value ? value.name : String(value)
-              } else {
-                result[field] = String(generator())
-              }
-            } else {
-              result[field] = `Unknown field: ${field}`
-            }
-          } catch (error) {
-            result[field] = `Error generating field: ${field}`
-          }
-        }
-      }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      }
-    },
-  })
+  toolServer.register(airline())
 
   // Animal module
   toolServer.register({
