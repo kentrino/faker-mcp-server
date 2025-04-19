@@ -8,6 +8,14 @@ describe("zod-to-json-schema", () => {
       z.object({
         name: z.string(),
         foo: z.enum(["bar"]),
+        uni: z.union([
+          z.object({
+            a: z.string(),
+          }),
+          z.object({
+            b: z.number(),
+          }),
+        ]),
       }),
     )
 
@@ -22,8 +30,32 @@ describe("zod-to-json-schema", () => {
           enum: ["bar"],
           type: "string",
         },
+        uni: {
+          anyOf: [
+            {
+              additionalProperties: false,
+              properties: {
+                a: {
+                  type: "string",
+                },
+              },
+              required: ["a"],
+              type: "object",
+            },
+            {
+              additionalProperties: false,
+              properties: {
+                b: {
+                  type: "number",
+                },
+              },
+              required: ["b"],
+              type: "object",
+            },
+          ],
+        },
       },
-      required: ["name", "foo"],
+      required: ["name", "foo", "uni"],
       type: "object",
     })
   })
