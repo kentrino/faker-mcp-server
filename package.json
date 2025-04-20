@@ -1,6 +1,6 @@
 {
   "name": "faker-mcp-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "MCP server to get fake strings",
   "author": "Kento Haneda <kento@hane.dad>",
   "type": "module",
@@ -8,7 +8,9 @@
   "bin": {
     "faker-server": "./build/index.js"
   },
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "shx rm -rf build && tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "format": "biome format",
