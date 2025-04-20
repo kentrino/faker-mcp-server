@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import type { Readable, Writable } from "node:stream"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import chalk from "chalk"
-import type { Readable, Writable } from "node:stream"
 import { createFakerServer } from "./createFakerServer.js"
 
 /**

@@ -1,8 +1,8 @@
 import { PassThrough } from "node:stream"
-import type { main as mainFn } from "../../src/index"
-import { Output } from "./Output"
 import { type JSONRPCResponse, JSONRPCResponseSchema } from "@modelcontextprotocol/sdk/types.js"
 import { z } from "zod"
+import type { main as mainFn } from "../../src/index"
+import { Output } from "./Output"
 
 export const Response = z.object({
   jsonrpc: z.string(),
