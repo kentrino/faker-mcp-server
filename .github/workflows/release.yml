@@ -5,7 +5,28 @@ on:
       - main
 
 jobs:
-  changelog:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8
+      - name: Install dependencies
+        run: |
+          bun install
+      - name: Lint
+        run: |
+          bun run lint
+      - name: Build
+        run: |
+          bun run build
+      - name: Format
+        run: |
+          bun run format
+      - name: Test
+        run: |
+          bun run test
+  create-release:
+    needs: check
     permissions:
       contents: write
     runs-on: ubuntu-latest
