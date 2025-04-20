@@ -10,6 +10,10 @@
   "files": ["build"],
   "scripts": {
     "build": "shx rm -rf build && tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "format": "biome format",
+    "format:fix": "biome format --unsafe --write",
+    "lint": "biome check",
+    "lint:fix": "biome check --unsafe --write",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "bun run build && npx @modelcontextprotocol/inspector build/index.js",
