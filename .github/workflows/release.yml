@@ -1,0 +1,34 @@
+name: Releases
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changelog:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Generate GitHub Apps token
+        id: generate
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a
+        with:
+          app_id: 944889
+          private_key: ${{ secrets.KENTRINO_TOKEN_GENERATOR_PRIVATE_KEY }}
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@67139193614f5b9e8db87da1bd4240922b34d765
+        with:
+          github-token: ${{ steps.generate.outputs.token }}
+          version-file: './package.json'
+      - name: create release
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ steps.generate.outputs.token }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
